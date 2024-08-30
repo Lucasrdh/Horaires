@@ -1,39 +1,50 @@
-package org.example;
+package org.example;  // Déclare que cette classe fait partie du package org.example
 
+// Importe les classes nécessaires pour travailler avec les dates et heures
+import java.time.LocalDateTime;
+import java.time.DayOfWeek;
+
+// Classe Welcome
 public class Welcome {
-    public String day;
-    public int time;
 
-    public Welcome(String day, int time) {
-        this.day = day;
-        this.time = time;
+   final private LocalDateTime date;  // Variable membre pour stocker la date et l'heure
+
+    // Constructeur de la classe Welcome qui prend un Idate en paramètre
+    public Welcome(Idate date) {
+        this.date = date.getDate();  // Initialise la date avec la date obtenue à partir de l'interface Idate
     }
 
+    // Méthode pour obtenir le message de bienvenue en fonction de la date et de l'heure
     public String getMessage() {
+        String message = "";  // Initialise le message par défaut
 
-        final int FRIDAY_END = 18;
-        final int MONDAY_START = 9;
+        DayOfWeek day = this.date.getDayOfWeek();  // Obtient le jour de la semaine
+        int hour = this.date.getHour();  // Obtient l'heure du jour
 
-
-        if (day.equals("Lundi") || day.equals("Mardi") || day.equals("Mercredi") || day.equals("Jeudi") || day.equals("Vendredi")) {
-            if (time >= 9 && time < 13) {
-                return "Bonjour";
+        // Condition pour vérifier si c'est le week-end
+        if ((day == DayOfWeek.FRIDAY && hour >= 18) || (day == DayOfWeek.MONDAY && hour < 9)) {
+            message = "Bon week-end";
+        }
+        // Si ce n'est pas le week-end et ce n'est pas samedi ou dimanche
+        else if (day != DayOfWeek.SATURDAY && day != DayOfWeek.SUNDAY) {
+            // Vérifie si l'heure est entre 9h et 13h
+            if (hour >= 9 && hour < 13) {
+                message = "Bonjour";
             }
-            if (time >= 13 && time < 18) {
-                return "Bon après-midi";
+            // Vérifie si l'heure est entre 13h et 18h
+            else if (hour >= 13 && hour < 18) {
+                message = "Bon après-midi";
             }
-            if (time >= 18 || time < 9) {
-                return "Bonsoir";
+            // Si l'heure est après 18h ou avant 9h le jour n'est pas Vendredi
+            else if (day != DayOfWeek.FRIDAY) {
+                if (hour >= 18 || hour < 9) {
+                    message = "Bonsoir";
+                }
             }
+        } else {
+            message = "Bon week-end";  // Pour le week-end (Samedi et Dimanche)
         }
 
-
-        if ((day.equals("Vendredi") && time >= FRIDAY_END) || (day.equals("Lundi") && time < MONDAY_START) ||
-                (day.equals("Samedi")) || (day.equals("Dimanche"))) {
-            return "Bon weekend";
-        }
-
-
-        return "Message non disponible";
+        return message;  // Retourne le message approprié
     }
 }
